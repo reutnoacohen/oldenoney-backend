@@ -10,6 +10,10 @@ const Lead = require("./models/Lead");
 const requireAuth = require("./middleware/requireAuth");
 const leadsAdminRouter = require("./routes/leads.admin");
 const adminAuthRouter = require("./routes/admin.auth");
+const checkoutRouter = require("./routes/checkout");
+const webhooksRouter = require("./routes/webhooks");
+const ordersRouter = require("./routes/orders");
+const contactRouter = require("./routes/contact");
 
 const app = express();
 app.use(cors({ origin: true }));
@@ -21,6 +25,12 @@ app.get("/health", (req, res) => res.json({ ok: true, message: "API is up" }));
 app.use("/api/admin", adminAuthRouter);
 // Admin CRM API (protected: JWT Bearer or x-admin-key)
 app.use("/api/admin/leads", requireAuth, leadsAdminRouter);
+
+// Checkout & Tranzila
+app.use("/api/checkout", checkoutRouter);
+app.use("/api/webhooks", webhooksRouter);
+app.use("/api/orders", ordersRouter);
+app.use("/api/contact", contactRouter);
 
 // POST /api/leads – save a new lead (body: name, email, phone, message, source, utm or utmSource/utmMedium/...)
 app.post("/api/leads", async (req, res) => {
